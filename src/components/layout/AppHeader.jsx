@@ -32,7 +32,16 @@ export default function AppHeader({ onOpenMenu }) {
         inline
         label={
           <div className="flex cursor-pointer items-center gap-2">
-            <Avatar rounded placeholderInitials={initial} size="sm" />
+            {store?.avatar ? (
+              <img
+                className="h-8 w-8 rounded-full"
+                src={store?.avatar}
+                alt={store?.name}
+              />
+            ) : (
+              <Avatar rounded placeholderInitials={initial} size="sm" />
+            )}
+          
             <span className="hidden text-sm font-medium text-ink sm:block">
               {store?.name || 'Minha loja'}
             </span>

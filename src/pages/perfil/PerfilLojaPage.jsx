@@ -9,6 +9,7 @@ export default function PerfilLojaPage() {
     phone: store?.phone || '',
     street: store?.address?.street || '',
     number: store?.address?.number || '',
+    complement: store?.address?.complement || '',
     district: store?.address?.district || '',
     city: store?.address?.city || '',
     state: store?.address?.state || '',
@@ -74,6 +75,12 @@ export default function PerfilLojaPage() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
+              <Label htmlFor="complement" className="mb-1 block">
+                Complemento
+              </Label>
+              <TextInput id="complement" name="complement" value={form.complement} onChange={handleChange} />
+            </div>
+            <div>
               <Label htmlFor="district" className="mb-1 block">
                 Bairro
               </Label>
@@ -91,17 +98,19 @@ export default function PerfilLojaPage() {
               </Label>
               <TextInput id="state" name="state" value={form.state} onChange={handleChange} />
             </div>
+            <div>
+                <Label htmlFor="zipCode" className="mb-1 block">
+                CEP
+              </Label>
+              <TextInput id="zipCode" name="zipCode" value={form.zipCode} onChange={handleChange} />
+            </div>
+
           </div>
 
-          <div className="max-w-[200px]">
-            <Label htmlFor="zipCode" className="mb-1 block">
-              CEP
-            </Label>
-            <TextInput id="zipCode" name="zipCode" value={form.zipCode} onChange={handleChange} />
-          </div>
+          
 
           <div>
-            <Button type="submit" color="warning" className="bg-orange enabled:hover:bg-orange-dark">
+            <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark">
               Salvar alterações
             </Button>
           </div>
