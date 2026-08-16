@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+@import 'flowbite-react/plugin/tailwindcss';
+@source '../.flowbite-react/class-list.json';
+
+@theme {
+  /* Cores de marca — espelham src/theme/theme.js do delivroo-rider-android */
+  --color-orange: #FF6B35;
+  --color-orange-dark: #E0551F;
+  --color-cream: #FAF7F1;
+
+  --color-ink: #26211C;
+  --color-ink-soft: #6B655D;
+  --color-line: #E8E2D6;
+
+  --color-green: #2E9E5B;
+  --color-green-bg: #E7F5EC;
+  --color-red: #E24B4A;
+  --color-red-bg: #FCEBEB;
+  --color-amber: #BA7517;
+  --color-amber-bg: #FAEEDA;
+
+  /* Tipografia */
+  --font-heading: 'Baloo 2', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Raios — espelham radius do theme.js (sm/md/lg/xl/xxl/pill) */
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+}
+
+body {
+  @apply bg-cream text-ink font-sans antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-heading text-ink;
+}

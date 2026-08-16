@@ -1,0 +1,53 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import RequireAuth from './routes/RequireAuth';
+import RequireGuest from './routes/RequireGuest';
+
+import AuthLayout from './components/layout/AuthLayout';
+import AppLayout from './components/layout/AppLayout';
+
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+
+import DashboardPage from './pages/dashboard/DashboardPage';
+import PedidosPage from './pages/pedidos/PedidosPage';
+import CardapioPage from './pages/cardapio/CardapioPage';
+import PerfilLojaPage from './pages/perfil/PerfilLojaPage';
+import ContaPage from './pages/conta/ContaPage';
+
+import NotFoundPage from './pages/NotFoundPage';
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+
+          {/* Rotas públicas — redirecionam para /dashboard se já autenticado */}
+          <Route element={<RequireGuest />}>
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/cadastro" element={<RegisterPage />} />
+              <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
+            </Route>
+          </Route>
+
+          {/* Rotas autenticadas — redirecionam para /login se sem sessão */}
+          <Route element={<RequireAuth />}>
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/pedidos" element={<PedidosPage />} />
+              <Route path="/cardapio" element={<CardapioPage />} />
+              <Route path="/perfil-loja" element={<PerfilLojaPage />} />
+              <Route path="/conta" element={<ContaPage />} />
+            </Route>
+          </Route>
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
