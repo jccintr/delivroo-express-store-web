@@ -77,7 +77,7 @@ export default function LoginPage() {
           />
         </div>
 
-        <Button type="submit" color="warning" className="mt-2 bg-orange enabled:hover:bg-orange-dark" isProcessing={loading}>
+        <Button type="submit" color="warning" className="mt-2 bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
           Entrar
         </Button>
       </form>

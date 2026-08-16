@@ -34,3 +34,19 @@ export function verifyPasswordCode(email, code) {
 export function resetPassword(payload) {
   return api.post('/stores/password/reset', payload);
 }
+
+// PATCH /stores/me — { name?, phone?, doc?, address? }
+// Requer e-mail verificado (API retorna 403 "Conta ainda não verificada." caso contrário).
+// Retorna a loja atualizada (sem token).
+export function updateStoreProfile(payload) {
+  return api.patch('/stores/me', payload, { auth: true });
+}
+
+// PATCH /stores/me/avatar — multipart/form-data, campo "avatar"
+// Aceita apenas JPEG/PNG/WebP, máximo 2 MB (validado no backend).
+// Retorna { message, avatar: url }
+export function uploadStoreAvatar(file) {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  return api.patchForm('/stores/me/avatar', formData, { auth: true });
+}

@@ -34,7 +34,7 @@ export default function AppHeader({ onOpenMenu }) {
           <div className="flex cursor-pointer items-center gap-2">
             {store?.avatar ? (
               <img
-                className="h-8 w-8 rounded-full"
+                className="h-10 w-10 rounded-md"
                 src={store?.avatar}
                 alt={store?.name}
               />
