@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { updateStoreProfile, uploadStoreAvatar } from '../../api/storeAuth';
 import AvatarCropperModal from '../../components/perfil/AvatarCropperModal';
+import PhoneInput from '../../components/ui/PhoneInput';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB — mesmo limite validado no backend
@@ -273,7 +274,7 @@ function ProfileForm({ store, onUpdated }) {
             <Label htmlFor="phone" className="mb-1 block">
               Telefone
             </Label>
-            <TextInput id="phone" name="phone" value={form.phone} onChange={handleChange} />
+            <PhoneInput id="phone" name="phone" value={form.phone} onChange={handleChange} />
           </div>
         </div>
 

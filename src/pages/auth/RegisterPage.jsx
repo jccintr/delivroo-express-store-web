@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Label, TextInput, Alert } from 'flowbite-react';
 import { registerStore } from '../../api/storeAuth';
 import PasswordInput from '../../components/ui/PasswordInput';
+import PhoneInput from '../../components/ui/PhoneInput';
+
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -68,10 +70,10 @@ export default function RegisterPage() {
           <Label htmlFor="phone" className="mb-1 block">
             Telefone
           </Label>
-          <TextInput
+          <PhoneInput
             id="phone"
             name="phone"
-            type="tel"
+            
             placeholder="(35) 99999-9999"
             value={form.phone}
             onChange={handleChange}
