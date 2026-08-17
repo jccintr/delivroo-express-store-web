@@ -22,7 +22,14 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      await login(form);
+      //await login(form);
+      const storeData = await login(form);
+
+      if (!storeData?.emailVerifiedAt) {
+        navigate('/verificar-conta', { replace: true });
+        return;
+      }
+      
       const redirectTo = location.state?.from?.pathname || '/dashboard';
       navigate(redirectTo, { replace: true });
     } catch (err) {

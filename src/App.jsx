@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import RequireAuth from './routes/RequireAuth';
 import RequireGuest from './routes/RequireGuest';
+import RequireUnverified from './routes/RequireUnverified';
 
 import AuthLayout from './components/layout/AuthLayout';
 import AppLayout from './components/layout/AppLayout';
@@ -9,6 +10,7 @@ import AppLayout from './components/layout/AppLayout';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import VerifyAccountPage from './pages/auth/VerifyAccountPage';
 
 import DashboardPage from './pages/dashboard/DashboardPage';
 import PedidosPage from './pages/pedidos/PedidosPage';
@@ -33,6 +35,13 @@ export default function App() {
               <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
             </Route>
           </Route>
+
+          {/* Verificação de conta — só para lojas autenticadas e ainda não verificadas */}
++          <Route element={<RequireUnverified />}>
++            <Route element={<AuthLayout />}>
++              <Route path="/verificar-conta" element={<VerifyAccountPage />} />
++            </Route>
++          </Route>
 
           {/* Rotas autenticadas — redirecionam para /login se sem sessão */}
           <Route element={<RequireAuth />}>

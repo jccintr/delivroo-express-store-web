@@ -95,7 +95,7 @@ export default function RegisterPage() {
         <Button
           type="submit"
           color="warning"
-          className="mt-2 bg-orange enabled:hover:bg-orange-dark"
+          className="mt-2 bg-orange text-white enabled:hover:bg-orange-dark"
           isProcessing={loading}
         >
           Criar conta

@@ -4,10 +4,10 @@ import { Drawer, DrawerItems } from 'flowbite-react';
 import AppSidebar from './AppSidebar';
 import AppHeader from './AppHeader';
 //import VerifyEmailBanner from './VerifyEmailBanner';
-import { useAuth } from '../../context/AuthContext';
+//import { useAuth } from '../../context/AuthContext';
 
 export default function AppLayout() {
-  const { isEmailVerified } = useAuth();
+  //const { isEmailVerified } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (

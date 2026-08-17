@@ -20,6 +20,12 @@ export function verifyAccount(code) {
   return api.post('/stores/verify-account', { code }, { auth: true });
 }
 
+// POST /stores/verify-account/resend — (autenticado, sem body)
+// Gera um novo emailVerificationCode e reenvia por e-mail.
+export function resendAccountVerification() {
+  return api.post('/stores/verify-account/resend', {}, { auth: true });
+}
+
 // POST /store/password/request — { email }
 export function requestPasswordCode(email) {
   return api.post('/stores/password/request', { email });
