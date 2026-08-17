@@ -5,6 +5,7 @@ import { HiOutlineMailOpen } from 'react-icons/hi';
 import { verifyAccount, resendAccountVerification } from '../../api/storeAuth';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import CodeInput from '../../components/ui/CodeInput';
 
 const CODE_LENGTH = 4;
 
@@ -13,43 +14,16 @@ export default function VerifyAccountPage() {
   const navigate = useNavigate();
   const showToast = useToast();
 
-  const [digits, setDigits] = useState(Array(CODE_LENGTH).fill(''));
+  const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const inputsRef = useRef([]);
+  const codeInputRef = useRef(null);
 
   const email = store?.email ?? '';
-  const isComplete = digits.every((d) => d !== '');
+  const isComplete = code.length === CODE_LENGTH;
   const busy = loading || resending;
-
-  function handleChangeDigit(value, index) {
-    const digit = value.replace(/[^0-9]/g, '').slice(-1);
-    const next = [...digits];
-    next[index] = digit;
-    setDigits(next);
-
-    if (digit && index < CODE_LENGTH - 1) {
-      inputsRef.current[index + 1]?.focus();
-    }
-  }
-
-  function handleKeyDown(e, index) {
-    if (e.key === 'Backspace' && !digits[index] && index > 0) {
-      inputsRef.current[index - 1]?.focus();
-    }
-  }
-
-  function handlePaste(e) {
-    const pasted = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, CODE_LENGTH);
-    if (!pasted) return;
-    e.preventDefault();
-    const next = Array(CODE_LENGTH).fill('');
-    for (let i = 0; i < pasted.length; i += 1) next[i] = pasted[i];
-    setDigits(next);
-    inputsRef.current[Math.min(pasted.length, CODE_LENGTH - 1)]?.focus();
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -58,7 +32,7 @@ export default function VerifyAccountPage() {
     setInfo('');
     setLoading(true);
     try {
-      const data = await verifyAccount(digits.join(''));
+      const data = await verifyAccount(code);
       updateStore({ emailVerifiedAt: data.emailVerifiedAt });
       showToast('Conta verificada com sucesso!');
       navigate('/dashboard', { replace: true });
@@ -76,8 +50,8 @@ export default function VerifyAccountPage() {
     setResending(true);
     try {
       await resendAccountVerification();
-      setDigits(Array(CODE_LENGTH).fill(''));
-      inputsRef.current[0]?.focus();
+      setCode('');
+      codeInputRef.current?.focusFirst();
       setInfo(`Um novo código foi enviado para ${email}.`);
     } catch (err) {
       setError(err.message);
@@ -117,21 +91,14 @@ export default function VerifyAccountPage() {
       )}
 
       <form onSubmit={handleSubmit} className="flex w-full flex-col items-center gap-6">
-        <div className="flex justify-center gap-2" onPaste={handlePaste}>
-          {digits.map((digit, index) => (
-            <input
-              key={index}
-              ref={(el) => (inputsRef.current[index] = el)}
-              value={digit}
-              onChange={(e) => handleChangeDigit(e.target.value, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              inputMode="numeric"
-              maxLength={1}
-              disabled={busy}
-              className="h-14 w-12 rounded-md border border-line text-center font-mono text-xl text-ink focus:border-orange focus:ring-orange disabled:opacity-50"
-            />
-          ))}
-        </div>
+        <CodeInput
+          ref={codeInputRef}
+          length={CODE_LENGTH}
+          value={code}
+          onChange={setCode}
+          disabled={busy}
+          autoFocus
+        />
 
         <Button
           type="submit"

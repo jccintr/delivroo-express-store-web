@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Label, TextInput, Alert } from 'flowbite-react';
 import { requestPasswordCode, verifyPasswordCode, resetPassword } from '../../api/storeAuth';
+import CodeInput from '../../components/ui/CodeInput';
 
 const STEPS = {
   EMAIL: 1,
   CODE: 2,
   NEW_PASSWORD: 3,
 };
+
+const CODE_LENGTH = 4;
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
@@ -35,10 +38,11 @@ export default function ForgotPasswordPage() {
 
   async function handleVerifyCode(e) {
     e.preventDefault();
+    if (code.length !== CODE_LENGTH) return;
     setError('');
     setLoading(true);
     try {
-      await verifyPasswordCode(email.trim(), code.trim());
+      await verifyPasswordCode(email.trim(), code);
       setStep(STEPS.NEW_PASSWORD);
     } catch (err) {
       setError(err.message);
@@ -58,7 +62,7 @@ export default function ForgotPasswordPage() {
 
     setLoading(true);
     try {
-      await resetPassword({ email: email.trim(), code: code.trim(), password });
+      await resetPassword({ email: email.trim(), code, password });
       navigate('/login', { replace: true, state: { passwordReset: true } });
     } catch (err) {
       setError(err.message);
@@ -74,7 +78,8 @@ export default function ForgotPasswordPage() {
         {step === STEPS.EMAIL && 'Informe o e-mail cadastrado da sua loja.'}
         {step === STEPS.CODE && (
           <>
-            Digite o código de 6 dígitos enviado para <span className="font-medium text-ink">{email}</span>.
+            Digite o código de {CODE_LENGTH} dígitos enviado para{' '}
+            <span className="font-medium text-ink">{email}</span>.
           </>
         )}
         {step === STEPS.NEW_PASSWORD && 'Escolha uma nova senha para sua conta.'}
@@ -117,28 +122,26 @@ export default function ForgotPasswordPage() {
       )}
 
       {step === STEPS.CODE && (
-        <form className="flex flex-col gap-4" onSubmit={handleVerifyCode}>
-          <div>
-            <Label htmlFor="code" className="mb-1 block">
-              Código de verificação
-            </Label>
-            <TextInput
-              id="code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="font-mono"
-              maxLength={6}
-              placeholder="000000"
-              required
-            />
-          </div>
-          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
+        <form className="flex flex-col items-center gap-6" onSubmit={handleVerifyCode}>
+          <CodeInput length={CODE_LENGTH} value={code} onChange={setCode} disabled={loading} autoFocus />
+
+          <Button
+            type="submit"
+            color="warning"
+            className="w-full bg-orange text-white enabled:hover:bg-orange-dark"
+            isProcessing={loading}
+            disabled={code.length !== CODE_LENGTH}
+          >
             Confirmar código
           </Button>
           <button
             type="button"
-            onClick={() => setStep(STEPS.EMAIL)}
-            className="text-center text-sm text-ink-soft hover:underline"
+            onClick={() => {
+              setCode('');
+              setStep(STEPS.EMAIL);
+            }}
+            disabled={loading}
+            className="text-center text-sm text-ink-soft hover:underline disabled:opacity-50"
           >
             Usar outro e-mail
           </button>
