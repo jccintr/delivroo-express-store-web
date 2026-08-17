@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Label, TextInput, Alert } from 'flowbite-react';
 import { useAuth } from '../../context/AuthContext';
+import PasswordInput from '../../components/ui/PasswordInput';
 
 
 export default function LoginPage() {
@@ -98,10 +99,10 @@ export default function LoginPage() {
               Esqueci minha senha
             </Link>
           </div>
-          <TextInput
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
+           // type="password"
             placeholder="••••••••"
             value={form.password}
             onChange={handleChange}

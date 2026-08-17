@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Label, TextInput, Alert } from 'flowbite-react';
 import { registerStore } from '../../api/storeAuth';
+import PasswordInput from '../../components/ui/PasswordInput';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -82,10 +83,10 @@ export default function RegisterPage() {
           <Label htmlFor="password" className="mb-1 block">
             Senha
           </Label>
-          <TextInput
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
+           
             value={form.password}
             onChange={handleChange}
             required

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Label, TextInput, Alert } from 'flowbite-react';
 import { requestPasswordCode, verifyPasswordCode, resetPassword } from '../../api/storeAuth';
 import CodeInput from '../../components/ui/CodeInput';
+import PasswordInput from '../../components/ui/PasswordInput';
 
 const STEPS = {
   EMAIL: 1,
@@ -154,9 +155,9 @@ export default function ForgotPasswordPage() {
             <Label htmlFor="password" className="mb-1 block">
               Nova senha
             </Label>
-            <TextInput
+            <PasswordInput
               id="password"
-              type="password"
+            
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -166,7 +167,7 @@ export default function ForgotPasswordPage() {
             <Label htmlFor="confirmPassword" className="mb-1 block">
               Confirmar nova senha
             </Label>
-            <TextInput
+            <PasswordInput
               id="confirmPassword"
               type="password"
               value={confirmPassword}
