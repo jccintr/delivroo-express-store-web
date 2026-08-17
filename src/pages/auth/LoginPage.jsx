@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Button, Label, TextInput, Alert } from 'flowbite-react';
+import { Button, Label, TextInput, Alert,Spinner } from 'flowbite-react';
 import { useAuth } from '../../context/AuthContext';
 import PasswordInput from '../../components/ui/PasswordInput';
 
@@ -110,8 +110,8 @@ export default function LoginPage() {
           />
         </div>
 
-        <Button type="submit" color="warning" className="mt-2 bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
-          Entrar
+        <Button type="submit" color="warning" className="mt-2 bg-orange text-white enabled:hover:bg-orange-dark" disabled={loading} isProcessing={loading}>
+          {!loading ? 'Entrar' : <Spinner size="sm" />}
         </Button>
       </form>
 

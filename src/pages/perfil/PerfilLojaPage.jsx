@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Avatar, Button, Label, TextInput, Card, Alert } from 'flowbite-react';
+import { Avatar, Button, Label, TextInput, Select, Card, Alert } from 'flowbite-react';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -9,6 +9,12 @@ import PhoneInput from '../../components/ui/PhoneInput';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB — mesmo limite validado no backend
+
+const BRAZIL_STATES = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+  'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+];
 
 export default function PerfilLojaPage() {
  
@@ -334,14 +340,14 @@ function ProfileForm({ store, onUpdated }) {
             <Label htmlFor="state" className="mb-1 block">
               Estado
             </Label>
-            <TextInput
-              id="state"
-              name="state"
-              value={form.state}
-              onChange={handleChange}
-              maxLength={2}
-              className="uppercase"
-            />
+              <Select id="state" name="state" value={form.state} onChange={handleChange}>
+                  <option value="">Selecione</option>
+                  {BRAZIL_STATES.map((uf) => (
+                    <option key={uf} value={uf}>
+                      {uf}
+                    </option>
+                  ))}
+            </Select>
           </div>
           <div>
             <Label htmlFor="zipCode" className="mb-1 block">

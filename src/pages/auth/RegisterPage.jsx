@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Label, TextInput, Alert } from 'flowbite-react';
+import { Button, Label, TextInput, Alert,Spinner } from 'flowbite-react';
 import { registerStore } from '../../api/storeAuth';
 import PasswordInput from '../../components/ui/PasswordInput';
 import PhoneInput from '../../components/ui/PhoneInput';
@@ -100,8 +100,9 @@ export default function RegisterPage() {
           color="warning"
           className="mt-2 bg-orange text-white enabled:hover:bg-orange-dark"
           isProcessing={loading}
+          disabled={loading}
         >
-          Criar conta
+          {!loading ? 'Criar Conta' : <Spinner size="sm" />}
         </Button>
       </form>
 

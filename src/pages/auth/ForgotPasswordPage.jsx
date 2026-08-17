@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Label, TextInput, Alert } from 'flowbite-react';
+import { Button, Label, TextInput, Alert, Spinner } from 'flowbite-react';
 import { requestPasswordCode, verifyPasswordCode, resetPassword } from '../../api/storeAuth';
 import CodeInput from '../../components/ui/CodeInput';
 import PasswordInput from '../../components/ui/PasswordInput';
@@ -116,8 +116,8 @@ export default function ForgotPasswordPage() {
               required
             />
           </div>
-          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
-            Enviar código
+          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" disabled={loading} isProcessing={loading}>
+            {!loading ? 'Enviar Código' : <Spinner size="sm" />}
           </Button>
         </form>
       )}
@@ -131,9 +131,9 @@ export default function ForgotPasswordPage() {
             color="warning"
             className="w-full bg-orange text-white enabled:hover:bg-orange-dark"
             isProcessing={loading}
-            disabled={code.length !== CODE_LENGTH}
+            disabled={code.length !== CODE_LENGTH || loading}
           >
-            Confirmar código
+            {!loading ? 'Confirmar Código' : <Spinner size="sm" />}
           </Button>
           <button
             type="button"
@@ -175,8 +175,8 @@ export default function ForgotPasswordPage() {
               required
             />
           </div>
-          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
-            Redefinir senha
+          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" disabled={loading} isProcessing={loading}>
+            {!loading ? 'Refefinir Senha' : <Spinner size="sm" />}
           </Button>
         </form>
       )}

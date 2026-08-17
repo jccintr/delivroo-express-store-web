@@ -107,7 +107,7 @@ export default function VerifyAccountPage() {
           isProcessing={loading}
           disabled={!isComplete || busy}
         >
-          Ativar conta
+          {!loading ? 'Ativar Conta' : <Spinner size="sm" />}
         </Button>
       </form>
 
