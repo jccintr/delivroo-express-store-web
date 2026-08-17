@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Label, TextInput, Alert } from 'flowbite-react';
 import { useAuth } from '../../context/AuthContext';
@@ -9,9 +9,22 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ email: location.state?.email ?? '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+   // Captura os avisos de sucesso do state de navegação uma única vez (no state,
+  // não derivado de location.state), pois o histórico é limpo logo em seguida.
+  const [justRegistered] = useState(Boolean(location.state?.justRegistered));
+  const [passwordReset] = useState(Boolean(location.state?.passwordReset));
+
+  // Evita que o aviso reapareça se o usuário voltar para /login pelo histórico do navegador
+  useEffect(() => {
+    if (location.state?.justRegistered || location.state?.passwordReset) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -47,6 +60,18 @@ export default function LoginPage() {
       {error && (
         <Alert color="failure" className="mb-4">
           {error}
+        </Alert>
+      )}
+
+       {!error && justRegistered && (
+        <Alert color="success" className="mb-4">
+          Conta criada com sucesso! Faça login para continuar.
+        </Alert>
+      )}
+
+      {!error && passwordReset && (
+        <Alert color="success" className="mb-4">
+          Senha alterada com sucesso! Faça login com sua nova senha.
         </Alert>
       )}
 

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Avatar, Button, Label, TextInput, Card, Alert } from 'flowbite-react';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import { updateStoreProfile, uploadStoreAvatar } from '../../api/storeAuth';
 import AvatarCropperModal from '../../components/perfil/AvatarCropperModal';
 
@@ -9,6 +10,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB — mesmo limite validado no backend
 
 export default function PerfilLojaPage() {
+ 
   const { store, updateStore } = useAuth();
 
   return (
@@ -31,13 +33,14 @@ export default function PerfilLojaPage() {
  * Independente do formulário de dados — chama PATCH /stores/me/avatar (multipart).
  */
 function AvatarCard({ store, onUpdated }) {
+   const showToast = useToast();
   const inputRef = useRef(null);
   const [rawImageSrc, setRawImageSrc] = useState(null); // dataURL da imagem original, aberta no cropper
   const [rawMimeType, setRawMimeType] = useState('image/jpeg');
   const [croppedBlob, setCroppedBlob] = useState(null); // blob quadrado já recortado, pronto pra enviar
   const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  //const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const currentAvatar = previewUrl || store?.avatar || null;
@@ -46,7 +49,7 @@ function AvatarCard({ store, onUpdated }) {
   function handleFileChange(e) {
     const selected = e.target.files?.[0];
     setError('');
-    setSuccess(false);
+   // setSuccess(false);
 
     if (!selected) return;
 
@@ -82,7 +85,7 @@ function AvatarCard({ store, onUpdated }) {
       setError('Não foi possível gerar uma imagem dentro do limite de 2 MB. Tente outra foto.');
       return;
     }
-
+    
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setCroppedBlob(blob);
     setPreviewUrl(URL.createObjectURL(blob));
@@ -103,7 +106,8 @@ function AvatarCard({ store, onUpdated }) {
       const file = new File([croppedBlob], 'avatar.jpg', { type: croppedBlob.type });
       const data = await uploadStoreAvatar(file);
       onUpdated({ avatar: data.avatar });
-      setSuccess(true);
+     // setSuccess(true);
+     showToast('Avatar atualizado com sucesso!');
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setCroppedBlob(null);
       setPreviewUrl(null);
@@ -118,11 +122,7 @@ function AvatarCard({ store, onUpdated }) {
     <Card className="border-line">
       <p className="mb-3 text-sm font-medium text-ink">Logotipo da Loja</p>
 
-      {success && (
-        <Alert color="success" className="mb-4" onDismiss={() => setSuccess(false)}>
-          Avatar atualizado com sucesso.
-        </Alert>
-      )}
+     
       {error && (
         <Alert color="failure" className="mb-4" onDismiss={() => setError('')}>
           {error}
@@ -199,6 +199,7 @@ function AvatarCard({ store, onUpdated }) {
  * A API exige e-mail verificado para aceitar esta atualização.
  */
 function ProfileForm({ store, onUpdated }) {
+  const showToast = useToast();
   const [form, setForm] = useState({
     name: store?.name || '',
     phone: store?.phone || '',
@@ -222,7 +223,7 @@ function ProfileForm({ store, onUpdated }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    setSuccess(false);
+    //setSuccess(false);
     setLoading(true);
 
     try {
@@ -242,7 +243,8 @@ function ProfileForm({ store, onUpdated }) {
       };
       const updatedStore = await updateStoreProfile(payload);
       onUpdated(updatedStore);
-      setSuccess(true);
+      //setSuccess(true);
+      showToast('Dados da loja salvos com sucesso!');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -252,11 +254,7 @@ function ProfileForm({ store, onUpdated }) {
 
   return (
     <Card className="border-line">
-      {success && (
-        <Alert color="success" className="mb-4" onDismiss={() => setSuccess(false)}>
-          Dados da loja salvos com sucesso.
-        </Alert>
-      )}
+      
       {error && (
         <Alert color="failure" className="mb-4" onDismiss={() => setError('')}>
           {error}

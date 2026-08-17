@@ -1,15 +1,17 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Alert } from 'flowbite-react';
+import { Button, Alert, Spinner } from 'flowbite-react';
 import { HiOutlineMailOpen } from 'react-icons/hi';
 import { verifyAccount, resendAccountVerification } from '../../api/storeAuth';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 
 const CODE_LENGTH = 4;
 
 export default function VerifyAccountPage() {
   const { store, updateStore, logout } = useAuth();
   const navigate = useNavigate();
+  const showToast = useToast();
 
   const [digits, setDigits] = useState(Array(CODE_LENGTH).fill(''));
   const [error, setError] = useState('');
@@ -20,6 +22,7 @@ export default function VerifyAccountPage() {
 
   const email = store?.email ?? '';
   const isComplete = digits.every((d) => d !== '');
+  const busy = loading || resending;
 
   function handleChangeDigit(value, index) {
     const digit = value.replace(/[^0-9]/g, '').slice(-1);
@@ -50,13 +53,14 @@ export default function VerifyAccountPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!isComplete) return;
+    if (!isComplete || busy) return;
     setError('');
     setInfo('');
     setLoading(true);
     try {
       const data = await verifyAccount(digits.join(''));
       updateStore({ emailVerifiedAt: data.emailVerifiedAt });
+      showToast('Conta verificada com sucesso!');
       navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err.message);
@@ -66,7 +70,7 @@ export default function VerifyAccountPage() {
   }
 
   async function handleResend() {
-    if (resending) return;
+    if (busy) return;
     setError('');
     setInfo('');
     setResending(true);
@@ -123,7 +127,8 @@ export default function VerifyAccountPage() {
               onKeyDown={(e) => handleKeyDown(e, index)}
               inputMode="numeric"
               maxLength={1}
-              className="h-14 w-12 rounded-md border border-line text-center font-mono text-xl text-ink focus:border-orange focus:ring-orange"
+              disabled={busy}
+              className="h-14 w-12 rounded-md border border-line text-center font-mono text-xl text-ink focus:border-orange focus:ring-orange disabled:opacity-50"
             />
           ))}
         </div>
@@ -133,7 +138,7 @@ export default function VerifyAccountPage() {
           color="warning"
           className="w-full bg-orange text-white enabled:hover:bg-orange-dark"
           isProcessing={loading}
-          disabled={!isComplete}
+          disabled={!isComplete || busy}
         >
           Ativar conta
         </Button>
@@ -142,16 +147,18 @@ export default function VerifyAccountPage() {
       <button
         type="button"
         onClick={handleResend}
-        disabled={resending}
-        className="mt-4 text-sm font-medium text-orange-dark hover:underline disabled:opacity-50"
+        disabled={busy}
+        className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-orange-dark hover:underline disabled:opacity-50"
       >
+        {resending && <Spinner size="sm" />}
         {resending ? 'Enviando…' : 'Reenviar código'}
       </button>
 
       <button
         type="button"
         onClick={handleUseAnotherAccount}
-        className="mt-3 text-sm font-medium text-ink-soft hover:underline"
+        disabled={busy}
+        className="mt-3 text-sm font-medium text-ink-soft hover:underline disabled:opacity-50"
       >
         Utilizar outra conta
       </button>

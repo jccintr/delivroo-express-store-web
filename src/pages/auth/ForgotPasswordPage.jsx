@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
               required
             />
           </div>
-          <Button type="submit" color="warning" className="bg-orange enabled:hover:bg-orange-dark" isProcessing={loading}>
+          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
             Enviar código
           </Button>
         </form>
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
               required
             />
           </div>
-          <Button type="submit" color="warning" className="bg-orange enabled:hover:bg-orange-dark" isProcessing={loading}>
+          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
             Confirmar código
           </Button>
           <button
@@ -171,7 +171,7 @@ export default function ForgotPasswordPage() {
               required
             />
           </div>
-          <Button type="submit" color="warning" className="bg-orange enabled:hover:bg-orange-dark" isProcessing={loading}>
+          <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" isProcessing={loading}>
             Redefinir senha
           </Button>
         </form>
