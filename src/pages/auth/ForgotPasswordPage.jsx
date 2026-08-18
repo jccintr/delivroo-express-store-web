@@ -176,7 +176,7 @@ export default function ForgotPasswordPage() {
             />
           </div>
           <Button type="submit" color="warning" className="bg-orange text-white enabled:hover:bg-orange-dark" disabled={loading} isProcessing={loading}>
-            {!loading ? 'Refefinir Senha' : <Spinner size="sm" />}
+            {!loading ? 'Redefinir Senha' : <Spinner size="sm" />}
           </Button>
         </form>
       )}
