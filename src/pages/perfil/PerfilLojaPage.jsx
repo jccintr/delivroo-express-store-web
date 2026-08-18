@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Avatar, Button, Label, TextInput, Select, Card, Alert } from 'flowbite-react';
+import { Avatar, Button, Label, TextInput, Select, Card, Alert, Spinner } from 'flowbite-react';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -282,14 +282,15 @@ function ProfileForm({ store, onUpdated }) {
             </Label>
             <PhoneInput id="phone" name="phone" value={form.phone} onChange={handleChange} />
           </div>
+          <div>
+            <Label htmlFor="doc" className="mb-1 block">
+               CNPJ / CPF
+             </Label>
+             <TextInput id="doc" name="doc" value={form.doc} onChange={handleChange} />
+          </div>
         </div>
 
-        <div className="max-w-xs">
-          <Label htmlFor="doc" className="mb-1 block">
-            CNPJ / Documento
-          </Label>
-          <TextInput id="doc" name="doc" value={form.doc} onChange={handleChange} />
-        </div>
+       
 
         <hr className="border-line" />
         <p className="text-sm font-medium text-ink">Endereço</p>
@@ -362,9 +363,10 @@ function ProfileForm({ store, onUpdated }) {
             type="submit"
             color="warning"
             className="bg-orange text-white enabled:hover:bg-orange-dark"
+            disabled={loading}
             isProcessing={loading}
           >
-            Salvar alterações
+            {!loading ? 'Salvar Alterações' : <Spinner size="sm" />}
           </Button>
         </div>
       </form>
