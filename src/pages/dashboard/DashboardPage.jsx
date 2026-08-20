@@ -3,14 +3,15 @@ import { HiOutlineClipboardList, HiOutlineCurrencyDollar, HiOutlineClock } from 
 import { useAuth } from '../../context/AuthContext';
 
 const stats = [
-  { label: 'Pedidos hoje', value: '0', icon: HiOutlineClipboardList, color: 'bg-orange/10 text-orange-dark' },
+  { label: 'Entregas hoje', value: '0', icon: HiOutlineClipboardList, color: 'bg-orange/10 text-orange-dark' },
   { label: 'Faturamento hoje', value: 'R$ 0,00', icon: HiOutlineCurrencyDollar, color: 'bg-green-bg text-green' },
-  { label: 'Tempo médio de preparo', value: '—', icon: HiOutlineClock, color: 'bg-amber-bg text-amber' },
+  { label: 'Tempo médio de entrega', value: '—', icon: HiOutlineClock, color: 'bg-amber-bg text-amber' },
 ];
 
-// TODO: os valores abaixo (pedidos hoje, faturamento, tempo médio) são
+// TODO: os valores abaixo (entregas hoje, faturamento, tempo médio) são
 // placeholders fixos. Substituir por dados reais assim que a API expuser
-// um endpoint de resumo/estatísticas da loja.
+// um endpoint de resumo/estatísticas da loja (e GET /stores/deliveries
+// para listar as entregas recentes).
 export default function DashboardPage() {
   const { store } = useAuth();
 
@@ -37,7 +38,7 @@ export default function DashboardPage() {
 
       <Card className="mt-6 border-line">
         <p className="text-sm text-ink-soft">
-          Nenhum pedido recente. Assim que sua loja receber pedidos, eles aparecerão aqui em tempo real.
+          Nenhuma entrega recente. Assim que você criar entregas, elas aparecerão aqui em tempo real.
         </p>
       </Card>
     </div>

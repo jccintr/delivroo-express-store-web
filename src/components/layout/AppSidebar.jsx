@@ -1,8 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import {
   HiOutlineViewGrid,
-  HiOutlineClipboardList,
-  HiOutlineBookOpen,
+  HiOutlinePlusCircle,
   HiOutlineOfficeBuilding,
   HiOutlineCog,
 } from 'react-icons/hi';
@@ -10,8 +9,7 @@ import Logo from '../Logo';
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: HiOutlineViewGrid },
-  { to: '/pedidos', label: 'Pedidos', icon: HiOutlineClipboardList },
-  { to: '/cardapio', label: 'Cardápio', icon: HiOutlineBookOpen },
+  { to: '/entregas/nova', label: 'Nova entrega', icon: HiOutlinePlusCircle },
   { to: '/perfil-loja', label: 'Perfil da loja', icon: HiOutlineOfficeBuilding },
   { to: '/conta', label: 'Conta', icon: HiOutlineCog },
 ];

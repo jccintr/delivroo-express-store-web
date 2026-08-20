@@ -12,12 +12,11 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import VerifyAccountPage from './pages/auth/VerifyAccountPage';
-import CardapioPage from './pages/cardapio/CardapioPage';
 import PerfilLojaPage from './pages/perfil/PerfilLojaPage';
 import ContaPage from './pages/conta/ContaPage';
 
 import DashboardPage from './pages/dashboard/DashboardPage';
-import PedidosPage from './pages/pedidos/PedidosPage';
+import NovaEntregaPage from './pages/entregas/NovaEntregaPage';
 import NotFoundPage from './pages/NotFoundPage';
  export default function App() {
    return (
@@ -47,8 +46,7 @@ import NotFoundPage from './pages/NotFoundPage';
             <Route element={<RequireAuth />}>
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/pedidos" element={<PedidosPage />} />
-                <Route path="/cardapio" element={<CardapioPage />} />
+                <Route path="/entregas/nova" element={<NovaEntregaPage />} />
                 <Route path="/perfil-loja" element={<PerfilLojaPage />} />
                 <Route path="/conta" element={<ContaPage />} />
               </Route>
