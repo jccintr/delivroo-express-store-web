@@ -23,6 +23,7 @@ const INITIAL_FORM = {
   valorDeclarado: '',
   observacoes: '',
   pagamento: 'Dinheiro',
+  valorACobrar: '',
   troco: '',
 };
 
@@ -38,6 +39,8 @@ export default function NovaEntregaPage() {
   const [form, setForm] = useState(INITIAL_FORM);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const isPaymentPending = form.pagamento !== 'Pago' && form.pagamento !== 'Nada a Pagar';
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -84,6 +87,7 @@ export default function NovaEntregaPage() {
           declaredvalue: toOptionalNumber(form.valorDeclarado),
           notes: form.observacoes || undefined,
           payment: form.pagamento,
+          amountDue: toOptionalNumber(form.valorACobrar),
           cashChange: toOptionalNumber(form.troco),
         },
       };
@@ -283,10 +287,27 @@ export default function NovaEntregaPage() {
                   onChange={handleChange}
                 />
               </div>
+              {isPaymentPending && (
+                <div>
+                  <Label htmlFor="valorACobrar" className="mb-1 block">
+                    Valor a cobrar do cliente (R$)
+                  </Label>
+                  <TextInput
+                    id="valorACobrar"
+                    name="valorACobrar"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="Opcional"
+                    value={form.valorACobrar}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
               {form.pagamento === 'Dinheiro' && (
                 <div>
                   <Label htmlFor="troco" className="mb-1 block">
-                    Troco para (R$)
+                    Troco a levar (R$)
                   </Label>
                   <TextInput
                     id="troco"
@@ -298,6 +319,9 @@ export default function NovaEntregaPage() {
                     value={form.troco}
                     onChange={handleChange}
                   />
+                  <p className="mt-1 text-xs text-ink-soft">
+                    Quanto de troco o entregador precisa levar para o cliente.
+                  </p>
                 </div>
               )}
             </div>
