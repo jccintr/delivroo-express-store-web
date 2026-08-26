@@ -16,6 +16,7 @@ import PerfilLojaPage from './pages/perfil/PerfilLojaPage';
 import ContaPage from './pages/conta/ContaPage';
 
 import DashboardPage from './pages/dashboard/DashboardPage';
+import EntregasPage from './pages/entregas/EntregasPage';
 import NovaEntregaPage from './pages/entregas/NovaEntregaPage';
 import NotFoundPage from './pages/NotFoundPage';
  export default function App() {
@@ -46,6 +47,7 @@ import NotFoundPage from './pages/NotFoundPage';
             <Route element={<RequireAuth />}>
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/entregas" element={<EntregasPage />} />
                 <Route path="/entregas/nova" element={<NovaEntregaPage />} />
                 <Route path="/perfil-loja" element={<PerfilLojaPage />} />
                 <Route path="/conta" element={<ContaPage />} />

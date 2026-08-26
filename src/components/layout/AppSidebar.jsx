@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import {
   HiOutlineViewGrid,
+  HiOutlineTruck,
   HiOutlinePlusCircle,
   HiOutlineOfficeBuilding,
   HiOutlineCog,
@@ -9,6 +10,9 @@ import Logo from '../Logo';
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: HiOutlineViewGrid },
+  // "end" evita que este item fique marcado como ativo também em /entregas/nova
+  // (o NavLink do react-router faz match por prefixo por padrão).
+  { to: '/entregas', label: 'Entregas', icon: HiOutlineTruck, end: true },
   { to: '/entregas/nova', label: 'Nova entrega', icon: HiOutlinePlusCircle },
   { to: '/perfil-loja', label: 'Perfil da loja', icon: HiOutlineOfficeBuilding },
   { to: '/conta', label: 'Conta', icon: HiOutlineCog },
@@ -22,10 +26,11 @@ export default function AppSidebar({ onNavigate }) {
       </div>
 
       <nav className="flex-1 space-y-1 px-3">
-        {links.map(({ to, label, icon: Icon }) => (
+        {links.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
+            end={end}
             onClick={onNavigate}
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
