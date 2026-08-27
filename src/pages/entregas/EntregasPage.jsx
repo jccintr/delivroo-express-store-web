@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Alert, Avatar, Badge, Button, Card, Spinner } from 'flowbite-react';
 import { HiOutlinePlusCircle, HiOutlineRefresh } from 'react-icons/hi';
 import { listStoreActiveDeliveries } from '../../api/deliveries';
+import { useRealtime } from '../../context/RealtimeContext';
 
 // Mesma tabela de status do modelo Delivery no backend (models/delivery.js).
 // Só 0-3 aparecem aqui: essa tela é só "pendentes ou em andamento" — estados
@@ -33,6 +34,7 @@ export default function EntregasPage() {
   const [deliveries, setDeliveries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { lastEvent, clearUnread } = useRealtime();
 
   const loadDeliveries = useCallback(async () => {
     setLoading(true);
@@ -50,6 +52,22 @@ export default function EntregasPage() {
   useEffect(() => {
     loadDeliveries();
   }, [loadDeliveries]);
+
+  // A loja está com esta tela aberta: qualquer notificação já foi vista
+  // aqui, não precisa acumular no badge da sidebar.
+  useEffect(() => {
+    clearUnread();
+  }, [clearUnread]);
+
+  // Um entregador aceitou/atualizou/cancelou uma entrega em algum lugar —
+  // busca a lista de novo para refletir o estado atual. Um refetch
+  // completo é mais simples e seguro do que tentar remendar o item certo
+  // no estado local, e o endpoint é leve o bastante pra isso ser barato.
+  useEffect(() => {
+    if (!lastEvent) return;
+    loadDeliveries();
+    clearUnread();
+  }, [lastEvent, loadDeliveries, clearUnread]);
 
   return (
     <div className="flex flex-col gap-6">
