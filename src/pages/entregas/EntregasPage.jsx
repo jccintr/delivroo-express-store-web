@@ -173,7 +173,7 @@ function DeliveryCard({ delivery, onCancel }) {
             <p className="text-xs text-ink-soft">Repasse: {formatCurrency(delivery.riderPayout)}</p>
           </div>
           {canCancel && (
-            <Button size="xs" color="light" className="text-red-600" onClick={onCancel}>
+            <Button size="xs" color="red"  onClick={onCancel}>
               <HiOutlineXCircle className="mr-1 h-4 w-4" />
               Cancelar
             </Button>

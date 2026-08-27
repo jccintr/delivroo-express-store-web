@@ -62,7 +62,7 @@ export default function CancelDeliveryModal({ delivery, onConfirm, onClose }) {
         <Button color="light" onClick={onClose} disabled={submitting}>
           Voltar
         </Button>
-        <Button color="failure" onClick={handleConfirm} isProcessing={submitting} disabled={submitting}>
+        <Button color="red" onClick={handleConfirm} isProcessing={submitting} disabled={submitting}>
           Confirmar cancelamento
         </Button>
       </ModalFooter>
