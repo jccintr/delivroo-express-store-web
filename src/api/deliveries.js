@@ -18,3 +18,11 @@ export function createDelivery(payload) {
 export function listStoreActiveDeliveries() {
   return api.get('/stores/deliveries/active', { auth: true });
 }
+
+// POST /stores/deliveries/:id/cancel — cancela uma entrega da loja
+// autenticada. Só é permitido enquanto o pacote ainda não foi retirado
+// (status 0 aguardando entregador ou 1 aceita); a partir da retirada (2+)
+// a API recusa com 409. Body: { motivo } (mínimo 3 caracteres).
+export function cancelStoreDelivery(id, motivo) {
+  return api.post(`/stores/deliveries/${id}/cancel`, { motivo }, { auth: true });
+}

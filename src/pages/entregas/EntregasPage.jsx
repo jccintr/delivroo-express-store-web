@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Alert, Avatar, Badge, Button, Card, Spinner } from 'flowbite-react';
-import { HiOutlinePlusCircle, HiOutlineRefresh } from 'react-icons/hi';
-import { listStoreActiveDeliveries } from '../../api/deliveries';
+import { HiOutlinePlusCircle, HiOutlineRefresh, HiOutlineXCircle } from 'react-icons/hi';
+import { listStoreActiveDeliveries, cancelStoreDelivery } from '../../api/deliveries';
 import { useRealtime } from '../../context/RealtimeContext';
+import { useToast } from '../../context/ToastContext';
+import CancelDeliveryModal from '../../components/entregas/CancelDeliveryModal';
 
 // Mesma tabela de status do modelo Delivery no backend (models/delivery.js).
 // Só 0-3 aparecem aqui: essa tela é só "pendentes ou em andamento" — estados
@@ -34,7 +36,9 @@ export default function EntregasPage() {
   const [deliveries, setDeliveries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [cancelingDelivery, setCancelingDelivery] = useState(null);
   const { lastEvent, clearUnread } = useRealtime();
+  const showToast = useToast();
 
   const loadDeliveries = useCallback(async () => {
     setLoading(true);
@@ -68,6 +72,13 @@ export default function EntregasPage() {
     loadDeliveries();
     clearUnread();
   }, [lastEvent, loadDeliveries, clearUnread]);
+
+  async function handleConfirmCancel(motivo) {
+    await cancelStoreDelivery(cancelingDelivery._id, motivo);
+    setCancelingDelivery(null);
+    showToast('Entrega cancelada.', 'success');
+    await loadDeliveries();
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -116,16 +127,31 @@ export default function EntregasPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {deliveries.map((delivery) => (
-            <DeliveryCard key={delivery._id} delivery={delivery} />
+            <DeliveryCard
+              key={delivery._id}
+              delivery={delivery}
+              onCancel={() => setCancelingDelivery(delivery)}
+            />
           ))}
         </div>
+      )}
+
+      {cancelingDelivery && (
+        <CancelDeliveryModal
+          delivery={cancelingDelivery}
+          onConfirm={handleConfirmCancel}
+          onClose={() => setCancelingDelivery(null)}
+        />
       )}
     </div>
   );
 }
 
-function DeliveryCard({ delivery }) {
+function DeliveryCard({ delivery, onCancel }) {
   const statusInfo = STATUS_INFO[delivery.status] ?? { label: 'Status desconhecido', badgeColor: 'gray' };
+  // Espelha a regra do backend (POST /stores/deliveries/:id/cancel): só dá
+  // pra cancelar enquanto o pacote ainda não foi retirado pelo entregador.
+  const canCancel = delivery.status === 0 || delivery.status === 1;
 
   return (
     <Card className="border-line">
@@ -141,9 +167,17 @@ function DeliveryCard({ delivery }) {
           <p className="mt-1 text-sm text-ink">{delivery.package?.description}</p>
         </div>
 
-        <div className="flex shrink-0 flex-col items-end gap-1 text-right">
-          <p className="text-sm font-medium text-ink">{delivery.distancia} km</p>
-          <p className="text-xs text-ink-soft">Repasse: {formatCurrency(delivery.riderPayout)}</p>
+        <div className="flex shrink-0 flex-col items-end gap-2 text-right">
+          <div>
+            <p className="text-sm font-medium text-ink">{delivery.distancia} km</p>
+            <p className="text-xs text-ink-soft">Repasse: {formatCurrency(delivery.riderPayout)}</p>
+          </div>
+          {canCancel && (
+            <Button size="xs" color="light" className="text-red-600" onClick={onCancel}>
+              <HiOutlineXCircle className="mr-1 h-4 w-4" />
+              Cancelar
+            </Button>
+          )}
         </div>
       </div>
 
