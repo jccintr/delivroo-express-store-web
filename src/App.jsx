@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { RealtimeProvider } from './context/RealtimeContext';
 import RequireAuth from './routes/RequireAuth';
 import RequireGuest from './routes/RequireGuest';
 import RequireUnverified from './routes/RequireUnverified';
@@ -24,6 +25,7 @@ import NotFoundPage from './pages/NotFoundPage';
      <BrowserRouter>
       <ToastProvider>
         <AuthProvider>
+          <RealtimeProvider>
           <Routes>
             <Route index element={<Navigate to="/dashboard" replace />} />
 
@@ -56,6 +58,7 @@ import NotFoundPage from './pages/NotFoundPage';
 
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          </RealtimeProvider>
         </AuthProvider>
       </ToastProvider>
      </BrowserRouter>

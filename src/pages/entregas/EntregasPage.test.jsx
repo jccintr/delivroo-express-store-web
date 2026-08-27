@@ -8,7 +8,12 @@ vi.mock('../../api/deliveries', () => ({
   listStoreActiveDeliveries: vi.fn(),
 }));
 
+vi.mock('../../context/RealtimeContext', () => ({
+  useRealtime: vi.fn(),
+}));
+
 import { listStoreActiveDeliveries } from '../../api/deliveries';
+import { useRealtime } from '../../context/RealtimeContext';
 
 function renderPage() {
   return render(
@@ -19,8 +24,12 @@ function renderPage() {
 }
 
 describe('EntregasPage', () => {
+  let clearUnread;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    clearUnread = vi.fn();
+    useRealtime.mockReturnValue({ lastEvent: null, unreadCount: 0, clearUnread });
   });
 
   it('mostra o spinner enquanto carrega', () => {
@@ -91,6 +100,42 @@ describe('EntregasPage', () => {
     expect(listStoreActiveDeliveries).toHaveBeenCalledTimes(1);
 
     await userEvent.click(screen.getByRole('button', { name: /atualizar/i }));
+
+    await waitFor(() => expect(listStoreActiveDeliveries).toHaveBeenCalledTimes(2));
+  });
+
+  it('limpa o badge de não lidas ao montar a tela', async () => {
+    listStoreActiveDeliveries.mockResolvedValue([]);
+
+    renderPage();
+    await screen.findByText(/nenhuma entrega pendente ou em andamento/i);
+
+    expect(clearUnread).toHaveBeenCalled();
+  });
+
+  it('busca a lista de novo quando chega um evento em tempo real (rider aceitou/atualizou/cancelou)', async () => {
+    listStoreActiveDeliveries.mockResolvedValue([]);
+    useRealtime.mockReturnValue({ lastEvent: null, unreadCount: 0, clearUnread });
+
+    const { rerender } = render(
+      <MemoryRouter>
+        <EntregasPage />
+      </MemoryRouter>,
+    );
+    await screen.findByText(/nenhuma entrega pendente ou em andamento/i);
+    expect(listStoreActiveDeliveries).toHaveBeenCalledTimes(1);
+
+    // Simula a chegada de um evento "delivery:updated" pelo WebSocket
+    useRealtime.mockReturnValue({
+      lastEvent: { type: 'delivery:updated', event: 'accepted', delivery: { _id: '1' } },
+      unreadCount: 0,
+      clearUnread,
+    });
+    rerender(
+      <MemoryRouter>
+        <EntregasPage />
+      </MemoryRouter>,
+    );
 
     await waitFor(() => expect(listStoreActiveDeliveries).toHaveBeenCalledTimes(2));
   });
