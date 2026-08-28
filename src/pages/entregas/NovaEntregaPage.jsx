@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Card, Label, Select, Textarea, TextInput } from 'flowbite-react';
+import { Alert, Button, Card, Label, Select, Textarea, TextInput, Spinner } from 'flowbite-react';
 import { HiCheckCircle } from 'react-icons/hi';
 import { useToast } from '../../context/ToastContext';
 import { createDelivery } from '../../api/deliveries';
@@ -333,8 +333,9 @@ export default function NovaEntregaPage() {
               color="warning"
               className="bg-orange text-white enabled:hover:bg-orange-dark"
               isProcessing={loading}
+              disabled={loading}
             >
-              Criar entrega
+              {!loading ? 'Criar Entrega' : <Spinner size="sm" />}
             </Button>
             <Button type="button" color="light" onClick={() => navigate(-1)} disabled={loading}>
               Cancelar
