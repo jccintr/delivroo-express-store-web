@@ -72,7 +72,7 @@ export default function EntregasPage() {
         <div>
           <h1 className="mb-1 text-xl font-bold">Entregas</h1>
           <p className="text-sm text-ink-soft">
-            Entregas pendentes ou em andamento — some da lista assim que forem entregues,
+            Entregas pendentes ou em andamento, são removidas da lista assim que forem entregues,
             devolvidas ou canceladas.
           </p>
         </div>

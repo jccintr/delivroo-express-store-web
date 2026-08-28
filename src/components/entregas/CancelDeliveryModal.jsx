@@ -37,7 +37,7 @@ export default function CancelDeliveryModal({ delivery, onConfirm, onClose }) {
           Você está cancelando a entrega para <strong>{delivery?.destino?.nome}</strong>.
           {delivery?.status === 1
             ? ' O entregador já tinha aceitado — ele será avisado do cancelamento.'
-            : ' Ela ainda não tinha sido aceita por nenhum entregador.'}
+            : ' Ela ainda não foi aceita por nenhum entregador.'}
         </p>
 
         {error && (
