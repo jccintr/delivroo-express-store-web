@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, Textarea, Alert } from 'flowbite-react';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, Textarea, Alert, Spinner } from 'flowbite-react';
 
 const MIN_MOTIVO_LENGTH = 3;
 
@@ -63,7 +63,7 @@ export default function CancelDeliveryModal({ delivery, onConfirm, onClose }) {
           Voltar
         </Button>
         <Button color="red" onClick={handleConfirm} isProcessing={submitting} disabled={submitting}>
-          Confirmar cancelamento
+          {!submitting ? 'Confirmar cancelamento' : <Spinner size="sm" />}
         </Button>
       </ModalFooter>
     </Modal>
