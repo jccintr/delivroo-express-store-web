@@ -21,6 +21,11 @@ import EntregasPage from './pages/entregas/EntregasPage';
 import HistoricoPage from './pages/entregas/HistoricoPage';
 import NovaEntregaPage from './pages/entregas/NovaEntregaPage';
 import NotFoundPage from './pages/NotFoundPage';
+
+
+
+
+
  export default function App() {
    return (
      <BrowserRouter>
