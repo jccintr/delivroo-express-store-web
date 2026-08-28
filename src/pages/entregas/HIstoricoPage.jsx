@@ -75,7 +75,7 @@ export default function HistoricoPage() {
 
       <Card className="border-line">
         <div className="flex flex-wrap items-end gap-4">
-          <div className="min-w-[180px]">
+          <div className="min-w-45">
             <Label htmlFor="filtroStatus" className="mb-1 block">
               Status
             </Label>
