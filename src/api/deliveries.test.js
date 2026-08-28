@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createDelivery, listStoreActiveDeliveries, cancelStoreDelivery } from './deliveries';
+import { createDelivery, listStoreActiveDeliveries, cancelStoreDelivery, listStoreDeliveryHistory } from './deliveries';
 import { setToken } from './client';
 
 function mockJsonResponse(data, { ok = true, status = 200 } = {}) {
@@ -116,4 +116,50 @@ describe('deliveries api', () => {
       });
     });
   });
+  describe('listStoreDeliveryHistory', () => {
+    it('GET /stores/deliveries/history sem parâmetros quando nenhum filtro é passado', async () => {
+      setToken('meu-jwt');
+      const response = { data: [], page: 1, limit: 20, total: 0, totalPages: 1 };
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockJsonResponse(response));
+
+      const data = await listStoreDeliveryHistory();
+
+      expect(data).toEqual(response);
+      const [calledUrl] = fetchSpy.mock.calls[0];
+      expect(calledUrl).toContain('/stores/deliveries/history');
+      expect(calledUrl.endsWith('/stores/deliveries/history')).toBe(true); // sem "?" quando não há filtros
+    });
+
+    it('monta a query string só com os filtros informados', async () => {
+      setToken('meu-jwt');
+      const response = { data: [], page: 2, limit: 10, total: 0, totalPages: 1 };
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(mockJsonResponse(response));
+
+      await listStoreDeliveryHistory({ status: 'delivered', from: '2026-01-01', page: 2, limit: 10 });
+
+      const [calledUrl] = fetchSpy.mock.calls[0];
+      const query = new URL(calledUrl).searchParams;
+      expect(query.get('status')).toBe('delivered');
+      expect(query.get('from')).toBe('2026-01-01');
+      expect(query.get('page')).toBe('2');
+      expect(query.get('limit')).toBe('10');
+      expect(query.has('to')).toBe(false);
+    });
+
+    it('propaga o erro da API (ex: filtro de status inválido) como ApiError', async () => {
+      setToken('meu-jwt');
+
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        mockJsonResponse({ error: 'Dados inválidos' }, { ok: false, status: 400 }),
+      );
+
+      await expect(listStoreDeliveryHistory({ status: 'invalido' })).rejects.toMatchObject({
+        message: 'Dados inválidos',
+        status: 400,
+      });
+    });
+  });
+
 });

@@ -3,6 +3,7 @@ import {
   HiOutlineViewGrid,
   HiOutlineTruck,
   HiOutlinePlusCircle,
+  HiOutlineClock,
   HiOutlineOfficeBuilding,
   HiOutlineCog,
 } from 'react-icons/hi';
@@ -15,6 +16,7 @@ const links = [
   // (o NavLink do react-router faz match por prefixo por padrão).
   { to: '/entregas', label: 'Entregas', icon: HiOutlineTruck, end: true, showBadge: true },
   { to: '/entregas/nova', label: 'Nova entrega', icon: HiOutlinePlusCircle },
+  { to: '/entregas/historico', label: 'Histórico', icon: HiOutlineClock },
   { to: '/perfil-loja', label: 'Perfil da loja', icon: HiOutlineOfficeBuilding },
   { to: '/conta', label: 'Conta', icon: HiOutlineCog },
 ];

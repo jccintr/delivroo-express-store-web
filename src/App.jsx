@@ -18,6 +18,7 @@ import ContaPage from './pages/conta/ContaPage';
 
 import DashboardPage from './pages/dashboard/DashboardPage';
 import EntregasPage from './pages/entregas/EntregasPage';
+import HistoricoPage from './pages/entregas/HistoricoPage';
 import NovaEntregaPage from './pages/entregas/NovaEntregaPage';
 import NotFoundPage from './pages/NotFoundPage';
  export default function App() {
@@ -51,6 +52,7 @@ import NotFoundPage from './pages/NotFoundPage';
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/entregas" element={<EntregasPage />} />
                 <Route path="/entregas/nova" element={<NovaEntregaPage />} />
+                <Route path="/entregas/historico" element={<HistoricoPage />} />
                 <Route path="/perfil-loja" element={<PerfilLojaPage />} />
                 <Route path="/conta" element={<ContaPage />} />
               </Route>

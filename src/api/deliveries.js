@@ -26,3 +26,21 @@ export function listStoreActiveDeliveries() {
 export function cancelStoreDelivery(id, motivo) {
   return api.post(`/stores/deliveries/${id}/cancel`, { motivo }, { auth: true });
 }
+
+// GET /stores/deliveries/history — histórico de entregas finalizadas
+// (entregue, devolvida ou cancelada) da loja autenticada. Sempre paginado,
+// já que esse conjunto só cresce. Aceita filtros opcionais por status
+// ('delivered' | 'returned' | 'cancelled'), período (from/to, formato
+// AAAA-MM-DD, aplicado sobre createdAt) e paginação (page/limit).
+// Retorna { data, page, limit, total, totalPages }.
+export function listStoreDeliveryHistory({ status, from, to, page, limit } = {}) {
+  const params = new URLSearchParams();
+  if (status) params.set('status', status);
+  if (from) params.set('from', from);
+  if (to) params.set('to', to);
+  if (page) params.set('page', page);
+  if (limit) params.set('limit', limit);
+
+  const query = params.toString();
+  return api.get(`/stores/deliveries/history${query ? `?${query}` : ''}`, { auth: true });
+}

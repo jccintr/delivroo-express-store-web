@@ -6,6 +6,7 @@ import { listStoreActiveDeliveries, cancelStoreDelivery } from '../../api/delive
 import { useRealtime } from '../../context/RealtimeContext';
 import { useToast } from '../../context/ToastContext';
 import CancelDeliveryModal from '../../components/entregas/CancelDeliveryModal';
+import { formatDateTime, formatCurrency } from '../../utils/format';
 
 // Mesma tabela de status do modelo Delivery no backend (models/delivery.js).
 // Só 0-3 aparecem aqui: essa tela é só "pendentes ou em andamento" — estados
@@ -16,21 +17,6 @@ const STATUS_INFO = {
   2: { label: 'Pacote retirado', badgeColor: 'purple' },
   3: { label: 'A caminho', badgeColor: 'success' },
 };
-
-function formatDateTime(value) {
-  if (!value) return '—';
-  return new Date(value).toLocaleString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-function formatCurrency(value) {
-  if (value == null) return '—';
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
 
 export default function EntregasPage() {
   const [deliveries, setDeliveries] = useState([]);
