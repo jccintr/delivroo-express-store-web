@@ -1,16 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Label, TextInput, Alert,Spinner } from 'flowbite-react';
+import { Button, Label, TextInput, Select, Alert, Spinner } from 'flowbite-react';
 import { registerStore } from '../../api/storeAuth';
+import { fetchActiveCities } from '../../api/cities';
 import PasswordInput from '../../components/ui/PasswordInput';
 import PhoneInput from '../../components/ui/PhoneInput';
 
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', cityId: '' });
+  const [cities, setCities] = useState([]);
+  const [citiesError, setCitiesError] = useState('');
+  const [loadingCities, setLoadingCities] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadCities() {
+      try {
+        const data = await fetchActiveCities();
+        if (active) setCities(data);
+      } catch (err) {
+        if (active) setCitiesError(err.message);
+      } finally {
+        if (active) setLoadingCities(false);
+      }
+    }
+
+    loadCities();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -79,6 +103,34 @@ export default function RegisterPage() {
             onChange={handleChange}
             required
           />
+        </div>
+
+        <div>
+          <Label htmlFor="cityId" className="mb-1 block">
+            Cidade
+          </Label>
+          <Select
+            id="cityId"
+            name="cityId"
+            value={form.cityId}
+            onChange={handleChange}
+            disabled={loadingCities || !!citiesError}
+            required
+          >
+            <option value="">
+              {loadingCities ? 'Carregando cidades...' : 'Selecione'}
+            </option>
+            {cities.map((city) => (
+              <option key={city._id} value={city._id}>
+                {city.name} - {city.state}
+              </option>
+            ))}
+          </Select>
+          {citiesError && (
+            <p className="mt-1 text-sm text-red-600">
+              Não foi possível carregar as cidades. Recarregue a página.
+            </p>
+          )}
         </div>
 
         <div>

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Avatar, Button, Label, TextInput, Select, Card, Alert, Spinner } from 'flowbite-react';
+import { Avatar, Button, Label, TextInput, Card, Alert, Spinner } from 'flowbite-react';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -10,11 +10,6 @@ import PhoneInput from '../../components/ui/PhoneInput';
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB — mesmo limite validado no backend
 
-const BRAZIL_STATES = [
-  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
-  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
-  'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
-];
 
 export default function PerfilLojaPage() {
  
@@ -215,13 +210,13 @@ function ProfileForm({ store, onUpdated }) {
     number: store?.address?.number || '',
     complement: store?.address?.complement || '',
     district: store?.address?.district || '',
-    city: store?.address?.city || '',
-    state: store?.address?.state || '',
     zipCode: store?.address?.zipCode || '',
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const cityLabel = store?.city ? `${store.city.name} - ${store.city.state}` : '—';
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -243,8 +238,6 @@ function ProfileForm({ store, onUpdated }) {
           number: form.number,
           complement: form.complement,
           district: form.district,
-          city: form.city,
-          state: form.state,
           zipCode: form.zipCode,
         },
       };
@@ -329,33 +322,19 @@ function ProfileForm({ store, onUpdated }) {
             <TextInput id="district" name="district" value={form.district} onChange={handleChange} />
           </div>
           <div>
-            <Label htmlFor="city" className="mb-1 block">
-              Cidade
-            </Label>
-            <TextInput id="city" name="city" value={form.city} onChange={handleChange} />
+            <Label className="mb-1 block">Cidade</Label>
+            <TextInput value={cityLabel} disabled readOnly />
+            <p className="mt-1 text-xs text-ink-soft">
+              A cidade é definida no cadastro e não pode ser alterada por aqui.
+            </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:w-1/2">
-          <div>
-            <Label htmlFor="state" className="mb-1 block">
-              Estado
-            </Label>
-              <Select id="state" name="state" value={form.state} onChange={handleChange}>
-                  <option value="">Selecione</option>
-                  {BRAZIL_STATES.map((uf) => (
-                    <option key={uf} value={uf}>
-                      {uf}
-                    </option>
-                  ))}
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="zipCode" className="mb-1 block">
-              CEP
-            </Label>
-            <TextInput id="zipCode" name="zipCode" value={form.zipCode} onChange={handleChange} />
-          </div>
+        <div className="sm:w-1/2">
+          <Label htmlFor="zipCode" className="mb-1 block">
+            CEP
+          </Label>
+          <TextInput id="zipCode" name="zipCode" value={form.zipCode} onChange={handleChange} />
         </div>
 
         <div>

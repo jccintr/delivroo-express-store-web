@@ -8,7 +8,17 @@ vi.mock('../../api/storeAuth', () => ({
   registerStore: vi.fn(),
 }));
 
+vi.mock('../../api/cities', () => ({
+  fetchActiveCities: vi.fn(),
+}));
+
 import { registerStore } from '../../api/storeAuth';
+import { fetchActiveCities } from '../../api/cities';
+
+const MOCK_CITIES = [
+  { _id: 'city-1', name: 'Brazópolis', state: 'MG', slug: 'brazopolis-mg' },
+  { _id: 'city-2', name: 'Itajubá', state: 'MG', slug: 'itajuba-mg' },
+];
 
 function renderRegister() {
   return render(
@@ -24,18 +34,24 @@ function renderRegister() {
 describe('RegisterPage (smoke)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    fetchActiveCities.mockResolvedValue(MOCK_CITIES);
   });
 
-  it('renderiza formulário de cadastro', () => {
+  it('renderiza formulário de cadastro', async () => {
     renderRegister();
 
     expect(screen.getByRole('heading', { name: /cadastrar loja/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/nome da loja/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/e-mail/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/telefone/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/cidade/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/^senha$/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /criar conta/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /entrar/i })).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'Brazópolis - MG' })).toBeInTheDocument();
+    });
   });
 
   it('cadastro com sucesso chama registerStore e redireciona para /login', async () => {
@@ -47,9 +63,14 @@ describe('RegisterPage (smoke)', () => {
 
     renderRegister();
 
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'Brazópolis - MG' })).toBeInTheDocument();
+    });
+
     await user.type(screen.getByLabelText(/nome da loja/i), 'Pizzaria do Centro');
     await user.type(screen.getByLabelText(/e-mail/i), 'loja@test.com');
     await user.type(screen.getByLabelText(/telefone/i), '35999999999');
+    await user.selectOptions(screen.getByLabelText(/cidade/i), 'city-1');
     await user.type(screen.getByLabelText(/^senha$/i), '123456');
     await user.click(screen.getByRole('button', { name: /criar conta/i }));
 
@@ -59,6 +80,7 @@ describe('RegisterPage (smoke)', () => {
         email: 'loja@test.com',
         // PhoneInput aplica máscara brasileira
         phone: '(35) 99999-9999',
+        cityId: 'city-1',
         password: '123456',
       });
     });
@@ -74,9 +96,14 @@ describe('RegisterPage (smoke)', () => {
 
     renderRegister();
 
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'Brazópolis - MG' })).toBeInTheDocument();
+    });
+
     await user.type(screen.getByLabelText(/nome da loja/i), 'Pizzaria do Centro');
     await user.type(screen.getByLabelText(/e-mail/i), 'loja@test.com');
     await user.type(screen.getByLabelText(/telefone/i), '35999999999');
+    await user.selectOptions(screen.getByLabelText(/cidade/i), 'city-1');
     await user.type(screen.getByLabelText(/^senha$/i), '123456');
     await user.click(screen.getByRole('button', { name: /criar conta/i }));
 

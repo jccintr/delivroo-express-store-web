@@ -22,7 +22,7 @@ describe('CancelDeliveryModal', () => {
     render(<CancelDeliveryModal delivery={baseDelivery} onConfirm={onConfirm} onClose={onClose} />);
 
     expect(screen.getByText(/Maria Souza/)).toBeInTheDocument();
-    expect(screen.getByText(/ainda não tinha sido aceita/i)).toBeInTheDocument();
+    expect(screen.getByText(/ainda não foi aceita/i)).toBeInTheDocument();
   });
 
   it('avisa que o entregador será notificado quando a entrega já estava aceita (status 1)', () => {
