@@ -44,3 +44,24 @@ export function listStoreDeliveryHistory({ status, from, to, page, limit } = {})
   const query = params.toString();
   return api.get(`/stores/deliveries/history${query ? `?${query}` : ''}`, { auth: true });
 }
+
+// GET /stores/deliveries/dashboard — dados agregados para o dashboard:
+// indicadores "agora" (aguardando entregador / em andamento), estatísticas
+// por período (hoje/semana/mês — solicitadas, concluídas, canceladas ou
+// devolvidas, tempo médio até aceite/conclusão, distância total, repasse
+// total aos entregadores), série diária dos últimos 30 dias, top 5
+// entregadores do mês e distribuição por categoria de pacote no mês.
+// Não inclui nenhuma métrica de faturamento/receita da loja — fora do
+// escopo da plataforma.
+export function getStoreDashboardStats() {
+  return api.get('/stores/deliveries/dashboard', { auth: true });
+}
+
+// GET /stores/deliveries/recent — últimas N entregas da loja, de QUALQUER
+// status (diferente de listStoreActiveDeliveries/listStoreDeliveryHistory,
+// que só trazem um subconjunto de status cada). Usado no feed de
+// "atividade recente" do dashboard. limit: padrão 10 no backend, teto 50.
+export function listStoreRecentDeliveries({ limit } = {}) {
+  const query = limit ? `?limit=${limit}` : '';
+  return api.get(`/stores/deliveries/recent${query}`, { auth: true });
+}

@@ -16,3 +16,14 @@ export function formatCurrency(value) {
   if (value == null) return '—';
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
+
+// Usado no dashboard para tempo médio até aceite / até conclusão da
+// entrega. O backend já manda em minutos (com 1 casa decimal); aqui só
+// decide a melhor unidade de exibição.
+export function formatMinutes(value) {
+  if (value == null) return '—';
+  if (value < 60) return `${Math.round(value)} min`;
+  const hours = Math.floor(value / 60);
+  const minutes = Math.round(value % 60);
+  return minutes > 0 ? `${hours}h ${minutes}min` : `${hours}h`;
+}
