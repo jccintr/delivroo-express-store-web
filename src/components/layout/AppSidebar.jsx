@@ -6,6 +6,7 @@ import {
   HiOutlineClock,
   HiOutlineOfficeBuilding,
   HiOutlineCog,
+  HiOutlineCurrencyDollar,
 } from 'react-icons/hi';
 import Logo from '../Logo';
 import { useRealtime } from '../../context/RealtimeContext';
@@ -17,6 +18,7 @@ const links = [
   { to: '/entregas', label: 'Entregas', icon: HiOutlineTruck, end: true, showBadge: true },
   { to: '/entregas/nova', label: 'Nova entrega', icon: HiOutlinePlusCircle },
   { to: '/entregas/historico', label: 'Histórico', icon: HiOutlineClock },
+  { to: '/faturamento', label: 'Faturamento', icon: HiOutlineCurrencyDollar },
   { to: '/perfil-loja', label: 'Perfil da loja', icon: HiOutlineOfficeBuilding },
   { to: '/conta', label: 'Conta', icon: HiOutlineCog },
 ];

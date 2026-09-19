@@ -197,6 +197,16 @@ function HistoryDeliveryCard({ delivery }) {
         <div className="flex shrink-0 flex-col items-end gap-1 text-right">
           <p className="text-sm font-medium text-ink">{delivery.distancia} km</p>
           <p className="text-xs text-ink-soft">Repasse: {formatCurrency(delivery.riderPayout)}</p>
+          {delivery.status === 4 && (
+            <p className="text-xs text-ink-soft">
+              Taxa da plataforma:{' '}
+              {delivery.platformFeeWaived ? (
+                <span className="font-medium text-green">Grátis</span>
+              ) : (
+                formatCurrency(delivery.platformFee)
+              )}
+            </p>
+          )}
         </div>
       </div>
 

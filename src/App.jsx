@@ -20,6 +20,7 @@ import DashboardPage from './pages/dashboard/DashboardPage';
 import EntregasPage from './pages/entregas/EntregasPage';
 import HistoricoPage from './pages/entregas/HistoricoPage';
 import NovaEntregaPage from './pages/entregas/NovaEntregaPage';
+import FaturamentoPage from './pages/faturamento/FaturamentoPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 
@@ -58,6 +59,7 @@ import NotFoundPage from './pages/NotFoundPage';
                 <Route path="/entregas" element={<EntregasPage />} />
                 <Route path="/entregas/nova" element={<NovaEntregaPage />} />
                 <Route path="/entregas/historico" element={<HistoricoPage />} />
+                <Route path="/faturamento" element={<FaturamentoPage />} />
                 <Route path="/perfil-loja" element={<PerfilLojaPage />} />
                 <Route path="/conta" element={<ContaPage />} />
               </Route>

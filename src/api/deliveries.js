@@ -32,7 +32,9 @@ export function cancelStoreDelivery(id, motivo) {
 // já que esse conjunto só cresce. Aceita filtros opcionais por status
 // ('delivered' | 'returned' | 'cancelled'), período (from/to, formato
 // AAAA-MM-DD, aplicado sobre createdAt) e paginação (page/limit).
-// Retorna { data, page, limit, total, totalPages }.
+// Cada entrega vem com platformFee/platformFeeWaived (taxa cobrada da loja
+// por aquela entrega — só preenchido quando status é 'delivered', null nos
+// outros dois). Retorna { data, page, limit, total, totalPages }.
 export function listStoreDeliveryHistory({ status, from, to, page, limit } = {}) {
   const params = new URLSearchParams();
   if (status) params.set('status', status);
@@ -49,10 +51,14 @@ export function listStoreDeliveryHistory({ status, from, to, page, limit } = {})
 // indicadores "agora" (aguardando entregador / em andamento), estatísticas
 // por período (hoje/semana/mês — solicitadas, concluídas, canceladas ou
 // devolvidas, tempo médio até aceite/conclusão, distância total, repasse
-// total aos entregadores), série diária dos últimos 30 dias, top 5
-// entregadores do mês e distribuição por categoria de pacote no mês.
-// Não inclui nenhuma métrica de faturamento/receita da loja — fora do
-// escopo da plataforma.
+// total aos entregadores, taxa da plataforma cobrada no período e quantas
+// vieram isentas), série diária dos últimos 30 dias, top 5 entregadores do
+// mês, distribuição por categoria de pacote no mês, e o estado atual de
+// billing (taxa vigente da plataforma + saldo de entregas grátis da loja).
+// Isso é a taxa que a PLATAFORMA cobra da loja pela entrega — não inclui
+// nem nunca vai incluir a receita/faturamento das VENDAS da própria loja,
+// que é fora do escopo da plataforma (ver DashboardPage, que não usa os
+// campos de billing de propósito).
 export function getStoreDashboardStats() {
   return api.get('/stores/deliveries/dashboard', { auth: true });
 }

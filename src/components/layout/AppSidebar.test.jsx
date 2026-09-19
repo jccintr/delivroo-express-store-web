@@ -56,6 +56,7 @@ describe('AppSidebar', () => {
     expect(screen.getByText('Entregas')).toBeInTheDocument();
     expect(screen.getByText('Nova entrega')).toBeInTheDocument();
     expect(screen.getByText('Histórico')).toBeInTheDocument();
+    expect(screen.getByText('Faturamento')).toBeInTheDocument();
     expect(screen.getByText('Perfil da loja')).toBeInTheDocument();
     expect(screen.getByText('Conta')).toBeInTheDocument();
   });
