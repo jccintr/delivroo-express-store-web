@@ -35,7 +35,7 @@ export default function PerfilLojaPage() {
  * Independente do formulário de dados — chama PATCH /stores/me/avatar (multipart).
  */
 function AvatarCard({ store, onUpdated }) {
-   const showToast = useToast();
+  const showToast = useToast();
   const inputRef = useRef(null);
   const [rawImageSrc, setRawImageSrc] = useState(null); // dataURL da imagem original, aberta no cropper
   const [rawMimeType, setRawMimeType] = useState('image/jpeg');
@@ -173,7 +173,7 @@ function AvatarCard({ store, onUpdated }) {
                 onClick={handleUpload}
                 isProcessing={loading}
               >
-                Salvar avatar
+                 {!loading ? 'Salvar Avatar' : <Spinner size="sm" />}
               </Button>
               <Button size="sm" color="light" onClick={handleCancelPreview} disabled={loading}>
                 Cancelar
