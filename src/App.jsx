@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { RealtimeProvider } from './context/RealtimeContext';
+import { CreditsProvider } from './context/CreditsContext';
 import RequireAuth from './routes/RequireAuth';
 import RequireGuest from './routes/RequireGuest';
 import RequireUnverified from './routes/RequireUnverified';
@@ -20,6 +21,7 @@ import DashboardPage from './pages/dashboard/DashboardPage';
 import EntregasPage from './pages/entregas/EntregasPage';
 import HistoricoPage from './pages/entregas/HistoricoPage';
 import NovaEntregaPage from './pages/entregas/NovaEntregaPage';
+import CreditosPage from './pages/creditos/CreditosPage';
 import FaturamentoPage from './pages/faturamento/FaturamentoPage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -33,6 +35,7 @@ import NotFoundPage from './pages/NotFoundPage';
       <ToastProvider>
         <AuthProvider>
           <RealtimeProvider>
+          <CreditsProvider>
           <Routes>
             <Route index element={<Navigate to="/dashboard" replace />} />
 
@@ -59,6 +62,7 @@ import NotFoundPage from './pages/NotFoundPage';
                 <Route path="/entregas" element={<EntregasPage />} />
                 <Route path="/entregas/nova" element={<NovaEntregaPage />} />
                 <Route path="/entregas/historico" element={<HistoricoPage />} />
+                <Route path="/creditos" element={<CreditosPage />} />
                 <Route path="/faturamento" element={<FaturamentoPage />} />
                 <Route path="/perfil-loja" element={<PerfilLojaPage />} />
                 <Route path="/conta" element={<ContaPage />} />
@@ -67,6 +71,7 @@ import NotFoundPage from './pages/NotFoundPage';
 
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          </CreditsProvider>
           </RealtimeProvider>
         </AuthProvider>
       </ToastProvider>

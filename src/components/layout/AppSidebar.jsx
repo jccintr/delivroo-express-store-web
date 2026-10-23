@@ -7,9 +7,11 @@ import {
   HiOutlineOfficeBuilding,
   HiOutlineCog,
   HiOutlineCurrencyDollar,
+  HiOutlineShoppingCart,
 } from 'react-icons/hi';
 import Logo from '../Logo';
 import { useRealtime } from '../../context/RealtimeContext';
+import { useCredits } from '../../context/CreditsContext';
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: HiOutlineViewGrid },
@@ -18,6 +20,7 @@ const links = [
   { to: '/entregas', label: 'Entregas', icon: HiOutlineTruck, end: true, showBadge: true },
   { to: '/entregas/nova', label: 'Nova entrega', icon: HiOutlinePlusCircle },
   { to: '/entregas/historico', label: 'Histórico', icon: HiOutlineClock },
+  { to: '/creditos', label: 'Comprar entregas', icon: HiOutlineShoppingCart, showCredits: true },
   { to: '/faturamento', label: 'Faturamento', icon: HiOutlineCurrencyDollar },
   { to: '/perfil-loja', label: 'Perfil da loja', icon: HiOutlineOfficeBuilding },
   { to: '/conta', label: 'Conta', icon: HiOutlineCog },
@@ -25,6 +28,7 @@ const links = [
 
 export default function AppSidebar({ onNavigate }) {
   const { unreadCount } = useRealtime();
+  const { credits } = useCredits();
 
   return (
     <div className="flex h-full w-64 flex-col border-r border-line bg-white">
@@ -33,7 +37,7 @@ export default function AppSidebar({ onNavigate }) {
       </div>
 
       <nav className="flex-1 space-y-1 px-3">
-        {links.map(({ to, label, icon: Icon, end, showBadge }) => (
+        {links.map(({ to, label, icon: Icon, end, showBadge, showCredits }) => (
           <NavLink
             key={to}
             to={to}
@@ -52,6 +56,16 @@ export default function AppSidebar({ onNavigate }) {
             {showBadge && unreadCount > 0 && (
               <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red px-1.5 text-xs font-semibold text-white">
                 {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+            {showCredits && credits && (
+              <span
+                aria-label="Entregas disponíveis"
+                className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                  credits.availableToRequest <= 0 ? 'bg-red text-white' : 'bg-orange/10 text-orange-dark'
+                }`}
+              >
+                {`${credits.availableToRequest} disp.`}
               </span>
             )}
           </NavLink>

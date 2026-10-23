@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Button, Card, Label, Select, Textarea, TextInput, Spinner } from 'flowbite-react';
 import { HiCheckCircle } from 'react-icons/hi';
 import { useToast } from '../../context/ToastContext';
+import { useCredits } from '../../context/CreditsContext';
 import { createDelivery } from '../../api/deliveries';
 import PhoneInput from '../../components/ui/PhoneInput';
 import AddressAutocompleteInput from '../../components/ui/AddressAutocompleteInput';
@@ -36,6 +37,8 @@ function toOptionalNumber(value) {
 export default function NovaEntregaPage() {
   const navigate = useNavigate();
   const showToast = useToast();
+  const { refresh: refreshCredits } = useCredits();
+  const [noCredits, setNoCredits] = useState(false);
   const [form, setForm] = useState(INITIAL_FORM);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -62,6 +65,7 @@ export default function NovaEntregaPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    setNoCredits(false);
 
     if (form.destinoLat == null || form.destinoLng == null) {
       setError('Selecione o endereço de entrega a partir das sugestões da busca, não apenas digite.');
@@ -94,9 +98,14 @@ export default function NovaEntregaPage() {
 
       await createDelivery(payload);
       showToast('Entrega criada com sucesso!');
+      refreshCredits();
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
+      if (err.status === 402) {
+        setNoCredits(true);
+        refreshCredits();
+      }
     } finally {
       setLoading(false);
     }
@@ -116,6 +125,14 @@ export default function NovaEntregaPage() {
         {error && (
           <Alert color="failure" className="mb-4" onDismiss={() => setError('')}>
             {error}
+            {noCredits && (
+              <>
+                {' '}
+                <Link to="/creditos" className="font-semibold underline">
+                  Comprar entregas
+                </Link>
+              </>
+            )}
           </Alert>
         )}
 
@@ -345,4 +362,4 @@ export default function NovaEntregaPage() {
       </Card>
     </div>
   );
-}
+}

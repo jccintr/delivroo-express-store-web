@@ -35,6 +35,7 @@ export function RealtimeProvider({ children }) {
   const reconnectTimerRef = useRef(null);
   const [lastEvent, setLastEvent] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [creditsEvent, setCreditsEvent] = useState(null);
 
   const clearUnread = useCallback(() => setUnreadCount(0), []);
 
@@ -79,6 +80,20 @@ export function RealtimeProvider({ children }) {
           return;
         }
 
+        if (payload?.type === 'credits:updated') {
+          setCreditsEvent(payload);
+          playNotificationSound();
+          if (payload.reason === 'recharge_confirmed') {
+            showToast('Pagamento confirmado! Suas entregas já estão disponíveis.', 'success');
+          } else if (payload.reason === 'recharge_rejected') {
+            const why = payload.order?.rejectionReason;
+            showToast(`Pagamento não confirmado${why ? `: ${why}` : '.'}`, 'error');
+          } else {
+            showToast('Seu saldo de entregas foi atualizado.', 'success');
+          }
+          return;
+        }
+
         if (payload?.type !== 'delivery:updated') return;
 
         setLastEvent(payload);
@@ -108,7 +123,7 @@ export function RealtimeProvider({ children }) {
   }, [status, showToast]);
 
   return (
-    <RealtimeContext.Provider value={{ lastEvent, unreadCount, clearUnread }}>
+    <RealtimeContext.Provider value={{ lastEvent, unreadCount, clearUnread, creditsEvent }}>
       {children}
     </RealtimeContext.Provider>
   );
@@ -118,4 +133,4 @@ export function useRealtime() {
   const ctx = useContext(RealtimeContext);
   if (!ctx) throw new Error('useRealtime deve ser usado dentro de <RealtimeProvider>');
   return ctx;
-}
+}
